@@ -14,6 +14,8 @@ c = con.cursor(MySQLdb.cursors.DictCursor) # permite que o retorno do banco venh
 
 
 #Consultas 
+print("--------------SELECT------------------------")
+
 def select(campos, tabelas, where=None):
 
     global c # Permite usar o C dentro do escopo local
@@ -26,13 +28,16 @@ def select(campos, tabelas, where=None):
     
     return c.fetchall()
 
-print(select("nome, cpf, data_nascimento","alunos","id_aluno < 5"))
+#print(select("nome, cpf, data_nascimento","alunos","id_aluno < 5"))
 
 result = select("nome, cpf","alunos","id_aluno < 7")
 print(result[0])
-#print(result[0]["cpf"]) #Pega o primeiro item da lista e busca a chave "cpf"
+print(result[0]["cpf"]) #Pega o primeiro item da lista e busca a chave "cpf"
 
 # Inserção
+print("--------------INSERT------------------------")
+
+
 def insert(valores, tabela, campos=None):
     global c, con 
     
@@ -50,5 +55,32 @@ valores = [
 ]
 
 insert(valores, "alunos")
-print(select("nome, cpf, data_nascimento","alunos","id_aluno > 20"))
+print(select("nome, cpf, data_nascimento","alunos","id_aluno > 23"))
 
+print("--------------UPDATE------------------------")
+
+
+def update(campos, tabelas, where=None):
+    global c, con
+    
+    query = "UPDATE " + tabelas
+    
+    query = query + " SET " + ','.join([campo + " = '" + valor +"'" for campo,valor in campos.items()])
+    if(where): #Valida se foi adicionado algum Where
+        query = query + " WHERE " + where
+    c.execute(query)
+    con.commit()
+    
+update({"nome":"Miguel", "cidade":"londres"}, "alunos", "id_aluno = 29 or id_aluno = 28")
+
+print("--------------DELETE------------------------")
+
+def delete (tabela, where):
+    global c, con
+    
+    query = "DELETE FROM " + tabela + " WHERE " + where 
+    
+    c.execute(query)
+    con.commit()
+
+delete("alunos", "id_aluno > 19 and nome = 'Miguel' ")
