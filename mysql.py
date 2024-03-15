@@ -23,7 +23,7 @@ def select(campos, tabelas, where=None):
     
     return c.fetchall()
 
-print(select("nome, cpf","alunos","id_aluno < 7"))
+print(select("nome, cpf","alunos","id_aluno < 5"))
 
 
 
